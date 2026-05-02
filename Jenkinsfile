@@ -1,3 +1,4 @@
+  GNU nano 8.5                             Jenkinsfile
 pipeline {
     agent any
 
@@ -43,5 +44,4 @@ pipeline {
         failure {
             echo "❌ Build Failed!"
         }
-    }
-}
+
