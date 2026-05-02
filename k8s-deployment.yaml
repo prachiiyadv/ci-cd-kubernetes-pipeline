@@ -1,21 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-deployment
+  name: flask-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: my-app
-  strategy:
-    type: RollingUpdate
+      app: flask-app
   template:
     metadata:
       labels:
-        app: my-app
+        app: flask-app
     spec:
       containers:
-      - name: my-app-container
-        image: prachiiyadv/app
+      - name: flask-app
+        image: prachiiy258/app:latest
         ports:
         - containerPort: 5000
