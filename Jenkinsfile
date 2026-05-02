@@ -1,19 +1,11 @@
-  GNU nano 8.5                             Jenkinsfile
 pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "my-app"
-        CONTAINER_NAME = "my-app-container"
+        IMAGE_NAME = "prachiiyadv/app"
     }
 
     stages {
-
-        stage('Clone Code') {
-            steps {
-                echo "Code already checked out by Jenkins"
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
@@ -21,27 +13,26 @@ pipeline {
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Push Docker Image') {
             steps {
-                bat """
-                docker stop %CONTAINER_NAME% || exit 0
-                docker rm %CONTAINER_NAME% || exit 0
-                """
+                bat "docker push %IMAGE_NAME%"
             }
         }
 
-        stage('Run Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                bat "docker run -d -p 5000:5000 --name %CONTAINER_NAME% %IMAGE_NAME%"
+                bat "kubectl apply -f k8s-deployment.yaml"
+                bat "kubectl apply -f k8s-service.yaml"
             }
         }
     }
 
     post {
         success {
-            echo "✅ Deployment Successful! App running on port 5000"
+            echo "Deployment Successful"
         }
         failure {
-            echo "❌ Build Failed!"
+            echo "Pipeline Failed"
         }
-
+    }
+}
